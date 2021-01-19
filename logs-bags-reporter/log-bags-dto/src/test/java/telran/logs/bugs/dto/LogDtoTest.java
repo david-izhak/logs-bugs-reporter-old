@@ -22,14 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@ExtendWith(SpringExtension.class)
-@AutoConfigureMockMvc
-@WebMvcTest(LogDtoTest.TestController.class) //  what classes are tested
-@ContextConfiguration(classes = LogDtoTest.TestController.class) //  what classes will be in AC
+// @ExtendWith(SpringExtension.class)
+// @AutoConfigureMockMvc
+@WebMvcTest(LogDtoTest.TestController.class) // what classes are tested
+@ContextConfiguration(classes = LogDtoTest.TestController.class) // what classes will be in AC
 public class LogDtoTest {
-	
+
 	public static @RestController class TestController {
 		static LogDto logDtoExp = new LogDto(new Date(), LogType.NO_EXCEPTION, "artifact", 0, "");
+
 		@PostMapping("/")
 		void testPost(@RequestBody @Valid LogDto logDto) {
 			assertEquals(logDtoExp, logDto);
@@ -47,48 +48,46 @@ public class LogDtoTest {
 						.content(mapper.writeValueAsString(TestController.logDtoExp))).andReturn().getResponse()
 						.getStatus());
 	}
-	
+
 	@Test
 	void testWrongDate() throws JsonProcessingException, Exception {
 		TestController.logDtoExp.dateTime = null;
 		assertEquals(400,
 				mock.perform(post("/").contentType(MediaType.APPLICATION_JSON)
 						.content(mapper.writeValueAsString(TestController.logDtoExp))).andReturn().getResponse()
-				.getStatus());
+						.getStatus());
 	}
-	
+
 	@Test
 	void testEmptyArtifact() throws JsonProcessingException, Exception {
 		TestController.logDtoExp.artifact = null;
-		assertEquals(400,
-				mock.perform(post("/").contentType(MediaType.APPLICATION_JSON)
-						.content(mapper.writeValueAsString(TestController.logDtoExp))).andReturn().getResponse()
-				.getStatus());
+		
 	}
-	
+
 	@Test
 	void testEmptyLogType() throws JsonProcessingException, Exception {
 		TestController.logDtoExp.logType = null;
-		assertEquals(400,
-				mock.perform(post("/").contentType(MediaType.APPLICATION_JSON)
-						.content(mapper.writeValueAsString(TestController.logDtoExp))).andReturn().getResponse()
-				.getStatus());
+		
 	}
-	
+
 	@Test
 	void testLogTypeExeptions() throws JsonProcessingException, Exception {
 		LogType[] logTypes = TestController.logDtoExp.logType.values();
-		for(LogType logType: logTypes) {
-			if(logType != TestController.logDtoExp.logType.NO_EXCEPTION) {
+		for (LogType logType : logTypes) {
+			if (logType != TestController.logDtoExp.logType.NO_EXCEPTION) {
 				TestController.logDtoExp.logType = logType;
-				assertEquals(400,
-						mock.perform(post("/").contentType(MediaType.APPLICATION_JSON)
-								.content(mapper.writeValueAsString(TestController.logDtoExp))).andReturn().getResponse()
-						.getStatus());
+				test400(mock);
+				
 			}
 		}
-		
+
 	}
-	
+
+	private void test400(MockMvc mock) throws JsonProcessingException, Exception {
+		assertEquals(400,
+				mock.perform(post("/").contentType(MediaType.APPLICATION_JSON)
+						.content(mapper.writeValueAsString(TestController.logDtoExp))).andReturn().getResponse()
+						.getStatus());
+	}
 
 }
