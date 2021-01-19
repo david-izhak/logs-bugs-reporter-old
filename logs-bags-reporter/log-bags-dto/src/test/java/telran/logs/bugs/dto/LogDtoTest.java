@@ -42,10 +42,11 @@ public class LogDtoTest {
 
 	@Test
 	void testPostRun() throws JsonProcessingException, Exception {
-		//TestController.logDtoExp.dateTime = null;
 		assertEquals(200,
 				mock.perform(post("/").contentType(MediaType.APPLICATION_JSON)
 						.content(mapper.writeValueAsString(TestController.logDtoExp))).andReturn().getResponse()
 						.getStatus());
 	}
+	
+
 }
