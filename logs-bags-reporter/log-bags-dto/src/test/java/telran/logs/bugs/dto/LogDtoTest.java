@@ -48,5 +48,47 @@ public class LogDtoTest {
 						.getStatus());
 	}
 	
+	@Test
+	void testWrongDate() throws JsonProcessingException, Exception {
+		TestController.logDtoExp.dateTime = null;
+		assertEquals(400,
+				mock.perform(post("/").contentType(MediaType.APPLICATION_JSON)
+						.content(mapper.writeValueAsString(TestController.logDtoExp))).andReturn().getResponse()
+				.getStatus());
+	}
+	
+	@Test
+	void testEmptyArtifact() throws JsonProcessingException, Exception {
+		TestController.logDtoExp.artifact = null;
+		assertEquals(400,
+				mock.perform(post("/").contentType(MediaType.APPLICATION_JSON)
+						.content(mapper.writeValueAsString(TestController.logDtoExp))).andReturn().getResponse()
+				.getStatus());
+	}
+	
+	@Test
+	void testEmptyLogType() throws JsonProcessingException, Exception {
+		TestController.logDtoExp.logType = null;
+		assertEquals(400,
+				mock.perform(post("/").contentType(MediaType.APPLICATION_JSON)
+						.content(mapper.writeValueAsString(TestController.logDtoExp))).andReturn().getResponse()
+				.getStatus());
+	}
+	
+	@Test
+	void testLogTypeExeptions() throws JsonProcessingException, Exception {
+		LogType[] logTypes = TestController.logDtoExp.logType.values();
+		for(LogType logType: logTypes) {
+			if(logType != TestController.logDtoExp.logType.NO_EXCEPTION) {
+				TestController.logDtoExp.logType = logType;
+				assertEquals(400,
+						mock.perform(post("/").contentType(MediaType.APPLICATION_JSON)
+								.content(mapper.writeValueAsString(TestController.logDtoExp))).andReturn().getResponse()
+						.getStatus());
+			}
+		}
+		
+	}
+	
 
 }
