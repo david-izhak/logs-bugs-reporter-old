@@ -52,22 +52,19 @@ public class LogDtoTest {
 	@Test
 	void testWrongDate() throws JsonProcessingException, Exception {
 		TestController.logDtoExp.dateTime = null;
-		assertEquals(400,
-				mock.perform(post("/").contentType(MediaType.APPLICATION_JSON)
-						.content(mapper.writeValueAsString(TestController.logDtoExp))).andReturn().getResponse()
-						.getStatus());
+		test400(mock);
 	}
 
 	@Test
 	void testEmptyArtifact() throws JsonProcessingException, Exception {
 		TestController.logDtoExp.artifact = null;
-		
+		test400(mock);
 	}
 
 	@Test
 	void testEmptyLogType() throws JsonProcessingException, Exception {
 		TestController.logDtoExp.logType = null;
-		
+		test400(mock);
 	}
 
 	@Test
@@ -77,7 +74,7 @@ public class LogDtoTest {
 			if (logType != TestController.logDtoExp.logType.NO_EXCEPTION) {
 				TestController.logDtoExp.logType = logType;
 				test400(mock);
-				
+
 			}
 		}
 
