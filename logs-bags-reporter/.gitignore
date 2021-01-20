@@ -6,6 +6,8 @@ target/
 !**/src/test/**/target/
 
 mvnw*
+*.class
+*/bin/**
 
 ### STS ###
 .apt_generated
