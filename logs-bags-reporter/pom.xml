@@ -56,5 +56,6 @@
 
 	<modules>
 		<module>log-bags-dto</module>
+		<module>logs-bugs-mongo-document</module>
 	</modules>
 </project>
